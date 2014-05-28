@@ -109,4 +109,5 @@ public class RewriteRuleEndpointTest {
     assertThat(response.getStatus(), is(201));
     assertThat(response.getEntity(), is(sameInstance((Object) newModel)));
   }
+  
 }

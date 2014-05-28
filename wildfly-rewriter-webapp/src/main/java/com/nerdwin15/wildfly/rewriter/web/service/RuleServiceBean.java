@@ -26,7 +26,9 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import com.nerdwin15.wildfly.rewriter.web.RewriteRule;
+import com.nerdwin15.wildfly.rewriter.web.RuleModel;
 import com.nerdwin15.wildfly.rewriter.web.RulesModel;
+import com.nerdwin15.wildfly.rewriter.web.model.RuleModelBuilder;
 import com.nerdwin15.wildfly.rewriter.web.model.RulesModelBuilder;
 import com.nerdwin15.wildfly.rewriter.web.repo.RuleRepository;
 import com.nerdwin15.wildfly.rewriter.web.service.event.RuleChangeEvent;
@@ -42,6 +44,9 @@ public class RuleServiceBean implements RuleService {
 
   @Inject
   protected RuleRepository ruleRepository;
+  
+  @Inject
+  protected RuleModelBuilder ruleModelBuilder;
   
   @Inject
   protected RulesModelBuilder rulesModelBuilder;
@@ -67,6 +72,17 @@ public class RuleServiceBean implements RuleService {
   public void deleteRule(Long ruleId) {
     ruleRepository.deleteRule(ruleId);
     changeEvent.fire(new RuleChangeEvent(Type.DELETE, null));
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
+  public RuleModel addRule(RuleModel rule) {
+    RewriteRule rewriteRule = ruleRepository.createRule(rule);
+    changeEvent.fire(new RuleChangeEvent(Type.ADD, rewriteRule));
+    return ruleModelBuilder.setRule(rewriteRule).build();
   }
   
 }

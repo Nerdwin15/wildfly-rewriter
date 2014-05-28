@@ -16,36 +16,29 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.wildfly.rewriter.web.repo;
-
-import java.util.List;
+package com.nerdwin15.wildfly.rewriter.web.model;
 
 import com.nerdwin15.wildfly.rewriter.web.RewriteRule;
 import com.nerdwin15.wildfly.rewriter.web.RuleModel;
 
 /**
- * All rewrite rules in the repository.
+ * A model builder used for building {@link RuleModel} objects.
  *
  * @author Michael Irwin
  */
-public interface RuleRepository {
-  
-  /**
-   * Create a new rewrite rule and return the new domain object
-   * @param ruleModel The model of the rule to create
-   * @return The new domain object
-   */
-  RewriteRule createRule(RuleModel ruleModel);
+public interface RuleModelBuilder {
 
   /**
-   * Retrieve all rules from the repository
-   * @return All rewrite rules in the repository
+   * Set the rules to be used by the builder
+   * @param rules The rules to be used
+   * @return The builder
    */
-  List<RewriteRule> retrieveAllRules();
- 
+  RuleModelBuilder setRule(RewriteRule rules);
+  
   /**
-   * Delete the rule with the provided id
-   * @param ruleId The id of the rewrite rule to remove.
+   * Build the rule model
+   * @return The built model
    */
-  void deleteRule(Long ruleId);
+  RuleModel build();
+  
 }

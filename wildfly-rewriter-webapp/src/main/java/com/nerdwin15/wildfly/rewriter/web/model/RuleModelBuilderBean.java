@@ -16,36 +16,38 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.wildfly.rewriter.web.repo;
+package com.nerdwin15.wildfly.rewriter.web.model;
 
-import java.util.List;
+import javax.enterprise.context.RequestScoped;
 
 import com.nerdwin15.wildfly.rewriter.web.RewriteRule;
 import com.nerdwin15.wildfly.rewriter.web.RuleModel;
 
 /**
- * All rewrite rules in the repository.
+ * A {@link RuleModelBuilder} that is a CDI-injectable bean.
  *
  * @author Michael Irwin
  */
-public interface RuleRepository {
+@RequestScoped
+public class RuleModelBuilderBean implements RuleModelBuilder {
+
+  private RewriteRule rule;
   
   /**
-   * Create a new rewrite rule and return the new domain object
-   * @param ruleModel The model of the rule to create
-   * @return The new domain object
+   * {@inheritDoc}
    */
-  RewriteRule createRule(RuleModel ruleModel);
-
+  @Override
+  public RuleModelBuilder setRule(RewriteRule rule) {
+    this.rule = rule;
+    return this;
+  }
+  
   /**
-   * Retrieve all rules from the repository
-   * @return All rewrite rules in the repository
+   * {@inheritDoc}
    */
-  List<RewriteRule> retrieveAllRules();
- 
-  /**
-   * Delete the rule with the provided id
-   * @param ruleId The id of the rewrite rule to remove.
-   */
-  void deleteRule(Long ruleId);
+  @Override
+  public RuleModel build() {
+    return new RuleModelDTO(rule);
+  }
+  
 }

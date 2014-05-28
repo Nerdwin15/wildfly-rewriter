@@ -24,6 +24,8 @@ import static org.hamcrest.Matchers.sameInstance;
 
 import java.util.List;
 
+import javax.enterprise.event.Event;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -32,9 +34,12 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.nerdwin15.wildfly.rewriter.web.RewriteRule;
+import com.nerdwin15.wildfly.rewriter.web.RuleModel;
 import com.nerdwin15.wildfly.rewriter.web.RulesModel;
+import com.nerdwin15.wildfly.rewriter.web.model.RuleModelBuilder;
 import com.nerdwin15.wildfly.rewriter.web.model.RulesModelBuilder;
 import com.nerdwin15.wildfly.rewriter.web.repo.RuleRepository;
+import com.nerdwin15.wildfly.rewriter.web.service.event.RuleChangeEvent;
 
 /**
  * Unit test case for the {@link RuleServiceBean} class.
@@ -47,7 +52,9 @@ public class RuleServiceBeanTest {
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock RuleRepository ruleRepository;
+  @Mock RuleModelBuilder ruleModelBuilder;
   @Mock RulesModelBuilder rulesModelBuilder;
+  @Mock Event<RuleChangeEvent> event;
   
   private RuleServiceBean bean = new RuleServiceBean();
   
@@ -56,7 +63,9 @@ public class RuleServiceBeanTest {
    */
   @Before
   public void setUp() {
+    bean.changeEvent = event;
     bean.ruleRepository = ruleRepository;
+    bean.ruleModelBuilder = ruleModelBuilder;
     bean.rulesModelBuilder = rulesModelBuilder;
   }
   
@@ -89,8 +98,31 @@ public class RuleServiceBeanTest {
     final Long ruleId = 123L;
     context.checking(new Expectations() { { 
       oneOf(ruleRepository).deleteRule(ruleId);
+      oneOf(event).fire(with(any(RuleChangeEvent.class)));
     } });
 
     bean.deleteRule(ruleId);
   }
+  
+  /**
+   * Test the deletion of a rule
+   */
+  @Test
+  public void testAddRule() {
+    final RuleModel model = context.mock(RuleModel.class);
+    final RuleModel newModel = context.mock(RuleModel.class, "newModel");
+    final RewriteRule domainObject = context.mock(RewriteRule.class);
+    context.checking(new Expectations() { { 
+      oneOf(ruleRepository).createRule(model);
+        will(returnValue(domainObject));
+      oneOf(event).fire(with(any(RuleChangeEvent.class)));
+      oneOf(ruleModelBuilder).setRule(domainObject);
+        will(returnValue(ruleModelBuilder));
+      oneOf(ruleModelBuilder).build();
+        will(returnValue(newModel));
+    } });
+
+    bean.addRule(model);
+  }
+  
 }
