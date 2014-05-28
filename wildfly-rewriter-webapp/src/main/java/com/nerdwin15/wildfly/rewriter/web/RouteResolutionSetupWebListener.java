@@ -27,6 +27,7 @@ import javax.servlet.annotation.WebListener;
 
 import com.nerdwin15.wildfly.rewriter.RouteResolutionContainerProvider;
 import com.nerdwin15.wildfly.rewriter.RouteResolver;
+import com.nerdwin15.wildfly.rewriter.web.service.RouteResolvingService;
 
 /**
  * A {@link ServletContextListener} that sets this webapp as the 
@@ -37,7 +38,7 @@ import com.nerdwin15.wildfly.rewriter.RouteResolver;
 @WebListener
 public class RouteResolutionSetupWebListener implements ServletContextListener {
 
-  @Inject RouteResolver routeResolver;
+  @Inject RouteResolvingService routeResolver;
   
   private static ServiceLoader<RouteResolutionContainerProvider> provider = 
       ServiceLoader.load(RouteResolutionContainerProvider.class);

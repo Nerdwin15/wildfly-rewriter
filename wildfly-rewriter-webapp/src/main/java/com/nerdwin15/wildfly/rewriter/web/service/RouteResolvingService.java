@@ -1,5 +1,5 @@
 /*
- * File created on May 27, 2014 
+ * File created on May 28, 2014 
  *
  * Copyright 2013-2014 Nerdwin15, LLC
  *
@@ -16,29 +16,27 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.wildfly.rewriter.web;
-
-import javax.enterprise.context.ApplicationScoped;
+package com.nerdwin15.wildfly.rewriter.web.service;
 
 import com.nerdwin15.wildfly.rewriter.RouteResolver;
 
 /**
- * DESCRIBE THE TYPE HERE.
+ * This service is an extension to the {@link RouteResolver} that adds 
+ * additional functionality for the web application. 
+ * <p>
+ * This service is what is used to do the actual routing in the Rewriter
+ * subsystem.
+ * <p>
+ * It is expected that any implementation will store routes in memory to prevent
+ * database lookups for each and every incoming request. The refreshRoutes
+ * method will be used when a refresh of the internal cache is needed. 
  *
  * @author Michael Irwin
  */
-@ApplicationScoped
-public class RouteService implements RouteResolver {
+public interface RouteResolvingService extends RouteResolver {
 
   /**
-   * {@inheritDoc}
+   * Refresh the internal cache used for routing
    */
-  @Override
-  public String resolveRoute(String requestURI) {
-    if (requestURI.startsWith("/ws/example/")) {
-      return requestURI.replace("/ws/example/", "/sample-app/api/");
-    }
-    return null;
-  }
-  
+  void refreshRoutes();
 }
