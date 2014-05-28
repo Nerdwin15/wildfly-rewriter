@@ -21,6 +21,7 @@ package com.nerdwin15.wildfly.rewriter.web.service;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -28,6 +29,8 @@ import com.nerdwin15.wildfly.rewriter.web.RewriteRule;
 import com.nerdwin15.wildfly.rewriter.web.RulesModel;
 import com.nerdwin15.wildfly.rewriter.web.model.RulesModelBuilder;
 import com.nerdwin15.wildfly.rewriter.web.repo.RuleRepository;
+import com.nerdwin15.wildfly.rewriter.web.service.event.RuleChangeEvent;
+import com.nerdwin15.wildfly.rewriter.web.service.event.RuleChangeEvent.Type;
 
 /**
  * Implementation of the {@link RuleService} that is a CDI-injectable bean.
@@ -42,6 +45,9 @@ public class RuleServiceBean implements RuleService {
   
   @Inject
   protected RulesModelBuilder rulesModelBuilder;
+  
+  @Inject
+  protected Event<RuleChangeEvent> changeEvent;
   
   /**
    * {@inheritDoc}
@@ -60,6 +66,7 @@ public class RuleServiceBean implements RuleService {
   @Transactional
   public void deleteRule(Long ruleId) {
     ruleRepository.deleteRule(ruleId);
+    changeEvent.fire(new RuleChangeEvent(Type.DELETE, null));
   }
   
 }
