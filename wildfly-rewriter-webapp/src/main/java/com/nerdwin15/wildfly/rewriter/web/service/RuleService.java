@@ -18,6 +18,7 @@
  */
 package com.nerdwin15.wildfly.rewriter.web.service;
 
+import com.nerdwin15.wildfly.rewriter.web.RuleModel;
 import com.nerdwin15.wildfly.rewriter.web.RulesModel;
 
 /**
@@ -27,6 +28,13 @@ import com.nerdwin15.wildfly.rewriter.web.RulesModel;
  */
 public interface RuleService {
 
+  /**
+   * Save the incoming rule as a new rewriting rule
+   * @param rule The rule to save
+   * @return The updated rule
+   */
+  RuleModel addRule(RuleModel rule);
+  
   /**
    * Get all rewrite rules in the system
    * @return All rewrite rules in the system.

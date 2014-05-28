@@ -28,11 +28,14 @@ import javax.ws.rs.core.Response;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.nerdwin15.wildfly.rewriter.web.RuleModel;
 import com.nerdwin15.wildfly.rewriter.web.RulesModel;
+import com.nerdwin15.wildfly.rewriter.web.model.RuleModelDTO;
 import com.nerdwin15.wildfly.rewriter.web.service.RuleService;
 
 /**
@@ -43,7 +46,9 @@ import com.nerdwin15.wildfly.rewriter.web.service.RuleService;
 public class RewriteRuleEndpointTest {
   
   @Rule
-  public JUnitRuleMockery context = new JUnitRuleMockery();
+  public JUnitRuleMockery context = new JUnitRuleMockery() {{
+    setImposteriser(ClassImposteriser.INSTANCE);
+  }};
 
   @Mock RuleService ruleService;
   
@@ -86,5 +91,22 @@ public class RewriteRuleEndpointTest {
     Response response = endpoint.deleteRule(ruleId);
     assertThat(response.getStatus(), is(200));
     assertThat(response.getEntity(), is(nullValue()));
+  }
+  
+  /**
+   * Test the add rule endpoint
+   */
+  @Test
+  public void testAddRule() {
+    final RuleModelDTO model = context.mock(RuleModelDTO.class);
+    final RuleModel newModel = context.mock(RuleModel.class, "newModel");
+    context.checking(new Expectations() { {
+      oneOf(ruleService).addRule(model);
+      will(returnValue(newModel));
+    } });
+    
+    Response response = endpoint.addRule(model);
+    assertThat(response.getStatus(), is(201));
+    assertThat(response.getEntity(), is(sameInstance((Object) newModel)));
   }
 }
