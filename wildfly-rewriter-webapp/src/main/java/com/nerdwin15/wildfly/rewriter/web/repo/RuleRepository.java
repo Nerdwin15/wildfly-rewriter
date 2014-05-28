@@ -34,5 +34,10 @@ public interface RuleRepository {
    * @return All rewrite rules in the repository
    */
   List<RewriteRule> retrieveAllRules();
-  
+ 
+  /**
+   * Delete the rule with the provided id
+   * @param ruleId The id of the rewrite rule to remove.
+   */
+  void deleteRule(Long ruleId);
 }

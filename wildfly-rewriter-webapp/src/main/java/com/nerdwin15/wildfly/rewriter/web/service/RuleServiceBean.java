@@ -53,4 +53,13 @@ public class RuleServiceBean implements RuleService {
     return rulesModelBuilder.setRules(rules).build();
   }
   
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  @Transactional
+  public void deleteRule(Long ruleId) {
+    ruleRepository.deleteRule(ruleId);
+  }
+  
 }

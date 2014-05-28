@@ -80,4 +80,17 @@ public class RuleServiceBeanTest {
     
     assertThat(bean.getAllRules(), is(sameInstance((Object) model)));
   }
+  
+  /**
+   * Test the deletion of a rule
+   */
+  @Test
+  public void testDeleteRule() {
+    final Long ruleId = 123L;
+    context.checking(new Expectations() { { 
+      oneOf(ruleRepository).deleteRule(ruleId);
+    } });
+
+    bean.deleteRule(ruleId);
+  }
 }
