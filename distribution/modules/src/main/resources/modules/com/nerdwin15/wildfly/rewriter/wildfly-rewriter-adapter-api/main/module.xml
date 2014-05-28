@@ -1,0 +1,13 @@
+<module xmlns="urn:jboss:module:1.0" name="com.nerdwin15.wildfly.rewriter.wildfly-rewriter-adapter-api">
+  <resources>
+    <!-- Insert resources here -->
+  </resources>
+
+  <dependencies>
+    <module name="org.wildfly.extension.undertow"/>
+    <module name="io.undertow.core"/>
+    <module name="io.undertow.servlet"/>
+    <module name="org.slf4j" />
+    <module name="org.jboss.msc" />
+  </dependencies>
+</module>

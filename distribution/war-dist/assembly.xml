@@ -1,0 +1,32 @@
+<assembly>
+  <id>war-dist</id>
+
+  <formats>
+    <format>zip</format>
+  </formats>
+  
+  <includeBaseDirectory>true</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.build.directory}/unpacked</directory>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <source>${project.basedir}/README.md</source>
+      <outputDirectory />
+    </file>
+  </files>
+  <dependencySets>
+    <dependencySet>
+      <unpack>false</unpack>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <includes>
+        <include>com.nerdwin15.wildfly.rewriter:wildfly-rewriter-webapp:war</include>
+        <include>com.nerdwin15.wildfly.rewriter:modules:zip</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
