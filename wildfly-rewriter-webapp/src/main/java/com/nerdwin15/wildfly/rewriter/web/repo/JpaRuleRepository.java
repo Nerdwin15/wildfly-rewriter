@@ -48,4 +48,15 @@ public class JpaRuleRepository implements RuleRepository {
     return rules;
   }
   
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void deleteRule(Long ruleId) {
+    entityManager
+        .createNamedQuery("deleteRuleById")
+        .setParameter("id", ruleId)
+        .executeUpdate();
+  }
+  
 }

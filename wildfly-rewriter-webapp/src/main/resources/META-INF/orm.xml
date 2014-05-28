@@ -10,5 +10,12 @@
       ORDER BY r.from ASC
     </query>
   </named-query>
+  
+  <named-query name="deleteRuleById">
+    <query>
+      DELETE FROM RewriteRuleEntity r
+      WHERE r.id = :id
+    </query>
+  </named-query>
 
 </entity-mappings>
