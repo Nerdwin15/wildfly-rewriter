@@ -25,6 +25,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import com.nerdwin15.wildfly.rewriter.web.RewriteRule;
+import com.nerdwin15.wildfly.rewriter.web.RuleModel;
+import com.nerdwin15.wildfly.rewriter.web.domain.RewriteRuleEntity;
 
 /**
  * Implementation of the {@link RuleRepository} that uses JPA.
@@ -36,6 +38,18 @@ public class JpaRuleRepository implements RuleRepository {
 
   @PersistenceContext
   private EntityManager entityManager;
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public RewriteRule createRule(RuleModel ruleModel) {
+    RewriteRuleEntity entity = new RewriteRuleEntity();
+    entity.setFrom(ruleModel.getFrom());
+    entity.setTo(ruleModel.getTo());
+    entityManager.persist(entity);
+    return entity;
+  }
   
   /**
    * {@inheritDoc}
