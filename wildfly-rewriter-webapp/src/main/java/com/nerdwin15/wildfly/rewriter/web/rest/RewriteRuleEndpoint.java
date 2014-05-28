@@ -19,8 +19,10 @@
 package com.nerdwin15.wildfly.rewriter.web.rest;
 
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 import com.nerdwin15.wildfly.rewriter.web.service.RuleService;
@@ -43,6 +45,13 @@ public class RewriteRuleEndpoint {
   @GET
   public Response getRules() {
     return Response.ok(ruleService.getAllRules()).build();
+  }
+  
+  @DELETE
+  @Path("/{id}")
+  public Response deleteRule(@PathParam("id") Long id) {
+    ruleService.deleteRule(id);
+    return Response.ok().build();
   }
   
 }

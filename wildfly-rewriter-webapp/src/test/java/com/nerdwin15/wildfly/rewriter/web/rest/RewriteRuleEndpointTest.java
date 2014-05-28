@@ -20,6 +20,7 @@ package com.nerdwin15.wildfly.rewriter.web.rest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 
 import javax.ws.rs.core.Response;
@@ -70,5 +71,20 @@ public class RewriteRuleEndpointTest {
     Response response = endpoint.getRules();
     assertThat(response.getStatus(), is(200));
     assertThat(response.getEntity(), is(sameInstance((Object) model)));
+  }
+  
+  /**
+   * Test the delete rule endpoint
+   */
+  @Test
+  public void testDeleteRuleEndpoint() {
+    final Long ruleId = 123L;
+    context.checking(new Expectations() { {
+      oneOf(ruleService).deleteRule(ruleId);
+    } });
+    
+    Response response = endpoint.deleteRule(ruleId);
+    assertThat(response.getStatus(), is(200));
+    assertThat(response.getEntity(), is(nullValue()));
   }
 }

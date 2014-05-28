@@ -33,4 +33,10 @@ public interface RuleService {
    */
   RulesModel getAllRules();
   
+  /**
+   * Delete the rewrite rule based on the provided id
+   * @param ruleId The id of the rule to remove
+   */
+  void deleteRule(Long ruleId);
+  
 }
