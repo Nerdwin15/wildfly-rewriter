@@ -1,0 +1,26 @@
+<form class="form-horizontal">
+
+  <p><strong>#{msg['dialog.testRule.helpText']}</strong></p>
+
+  <div class="form-group">
+    <label for="from" class="control-label col-md-4">#{msg['dialog.testRule.from']}</label>
+    <div class="col-md-6">
+      <div class="input-group">
+        <input type="text" value="{{from}}" id="from" name="from" class="form-control" />
+        <span class="input-group-btn">
+          <button class="btn btn-default">
+            <span class="glyphicon icon-spin"></span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="from" class="control-label col-md-4">#{msg['dialog.testRule.rewritesTo']}</label>
+    <div class="col-md-6">
+      <p class="form-control-static" id="resolvesTo"></p>
+    </div>
+  </div>
+
+</form>

@@ -3,9 +3,8 @@ define([
   'jquery',
   'collections/RuleCollection',
   'views/RuleTableView',
-  'models/RuleModel',
-  'views/AddRuleView'
-  ], function($, RuleCollection, RuleTableView, RuleModel, AddRuleView) {
+  'models/RuleModel'
+  ], function($, RuleCollection, RuleTableView, RuleModel) {
   
   var tableView = new RuleTableView({ 
     collection: RuleCollection, 
@@ -26,11 +25,24 @@ define([
     });
   });
   
+  $("#testRewriteTrigger").click(function() {
+    require(['views/TestRuleView'], function(TestRuleView) {
+      var view = new TestRuleView();
+      new Backbone.BootstrapModal({
+        content : view,
+        title : "Rewrite Tester",
+        animate : true,
+        okText : view.getSubmitButtonText(),
+        cancelText : view.getCancelButtonText()
+      }).open();
+    });
+  });
+  
   $("#reloadRulesTrigger").click(function() {
     var $this = $(this);
     $this.button('loading');
     setTimeout(function() {
-      $.post(CONTEXT_ROOT + "/api/rules/refresh", function() {
+      $.post(CONTEXT_ROOT + "/api/routing/refresh", function() {
         $this.button('reset');
       });
     }, 500);
