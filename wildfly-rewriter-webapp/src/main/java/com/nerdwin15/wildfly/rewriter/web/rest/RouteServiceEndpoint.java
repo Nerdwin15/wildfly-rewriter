@@ -22,16 +22,17 @@ import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.nerdwin15.wildfly.rewriter.web.service.RouteResolvingService;
 
 /**
- * DESCRIBE THE TYPE HERE.
+ * A controller used for endpoints related to the routing service.
  *
  * @author Michael Irwin
  */
-@Path("/rules/refresh")
-public class RuleRefreshEndpoint {
+@Path("/routing")
+public class RouteServiceEndpoint {
 
   @Inject
   protected RouteResolvingService routeService;
@@ -41,8 +42,25 @@ public class RuleRefreshEndpoint {
    * @return A response
    */
   @POST
+  @Path("/refresh")
   public Response refreshRules() {
     routeService.refreshRoutes();
     return Response.ok().build();
   }
+  
+  /**
+   * An endpoint that allows one to get the result for a provided request URI. 
+   * @param requestURI
+   * @return A 204 if no rewrite is found. Otherwise, a 200 with the rewritten
+   * URI in the body.
+   */
+  @POST
+  @Path("/test")
+  public Response testPath(String requestURI) {
+    String newPath = routeService.resolveRoute(requestURI);
+    if (newPath == null)
+      return Response.status(Status.NO_CONTENT).build();
+    return Response.ok(newPath).build();
+  }
+  
 }

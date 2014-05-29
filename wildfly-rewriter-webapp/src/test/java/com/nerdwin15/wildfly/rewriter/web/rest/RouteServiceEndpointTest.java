@@ -21,6 +21,7 @@ package com.nerdwin15.wildfly.rewriter.web.rest;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 
 import javax.ws.rs.core.Response;
 
@@ -34,18 +35,18 @@ import org.junit.Test;
 import com.nerdwin15.wildfly.rewriter.web.service.RouteResolvingService;
 
 /**
- * Unit test case for the {@link RuleRefreshEndpoint} class.
+ * Unit test case for the {@link RouteServiceEndpoint} class.
  *
  * @author Michael Irwin
  */
-public class RuleRefreshEndpointTest {
+public class RouteServiceEndpointTest {
   
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
 
   @Mock RouteResolvingService routeService;
   
-  private RuleRefreshEndpoint endpoint = new RuleRefreshEndpoint();
+  private RouteServiceEndpoint endpoint = new RouteServiceEndpoint();
   
   /**
    * Perform setup tasks
@@ -69,4 +70,39 @@ public class RuleRefreshEndpointTest {
     assertThat(response.getEntity(), is(nullValue()));
   }
 
+  /**
+   * Test the rewrite test endpoint when a rule isn't found.
+   * It is expected that a 204 is returned, with no returning URI.
+   */
+  @Test
+  public void testRewriteTestEndpointWithNoRewriteFound() {
+    final String requestURI = "/ws/something/another";
+    context.checking(new Expectations() { { 
+      oneOf(routeService).resolveRoute(requestURI);
+      will(returnValue(null));
+    } });
+    
+    Response response = endpoint.testPath(requestURI);
+    assertThat(response.getStatus(), is(204));
+    assertThat(response.getEntity(), is(nullValue()));
+  }
+  
+  /**
+   * Test the rewrite test endpoint when a rewrite rule is found.
+   * It is expected that a 200 is returned, with the rewritten URI in the body.
+   */
+  @Test
+  public void testRewriteTestEndpointWithRewriteFound() {
+    final String requestURI = "/ws/something/another";
+    final String newURI = "/otherApp/api/value";
+    context.checking(new Expectations() { { 
+      oneOf(routeService).resolveRoute(requestURI);
+      will(returnValue(newURI));
+    } });
+    
+    Response response = endpoint.testPath(requestURI);
+    assertThat(response.getStatus(), is(200));
+    assertThat(response.getEntity(), is(sameInstance((Object) newURI)));
+  }
+  
 }
