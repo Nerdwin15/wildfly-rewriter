@@ -25,6 +25,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nerdwin15.wildfly.rewriter.RouteResolutionContainerProvider;
 import com.nerdwin15.wildfly.rewriter.RouteResolver;
 import com.nerdwin15.wildfly.rewriter.web.service.RouteResolvingService;
@@ -38,12 +41,14 @@ import com.nerdwin15.wildfly.rewriter.web.service.RouteResolvingService;
 @WebListener
 public class RouteResolutionSetupWebListener implements ServletContextListener {
 
-  @Inject RouteResolvingService routeResolver;
-  
+  private static Logger logger = 
+      LoggerFactory.getLogger(RouteResolutionSetupWebListener.class);
   private static ServiceLoader<RouteResolutionContainerProvider> provider = 
       ServiceLoader.load(RouteResolutionContainerProvider.class);
   private static RouteResolutionContainerProvider resolutionProvider;
   
+  @Inject RouteResolvingService routeResolver;
+
   /**
    * {@inheritDoc}
    */
@@ -51,11 +56,12 @@ public class RouteResolutionSetupWebListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent event) {
     resolutionProvider = provider.iterator().next();
     if (resolutionProvider != null) {
-      System.out.println("!*!*!* Set the route resolver");
       resolutionProvider.get().setRouteResolver(routeResolver);
+      logger.info("Configured application as RouteResolver for URL rewriting");
     }
     else {
-      System.out.println("!*!*!* Unable to find a resolutionProvider");
+      logger.warn("Unable to set RouteResolver - no provider found. " +
+          "Is the subsystem installed and enabled?");
     }
   }
   
@@ -66,6 +72,7 @@ public class RouteResolutionSetupWebListener implements ServletContextListener {
   public void contextDestroyed(ServletContextEvent event) {
     if (resolutionProvider != null) {
       resolutionProvider.get().clearRouteResolver();
+      logger.info("Removed application as RouteResolver for URL rewriting");
     }
   }
   
