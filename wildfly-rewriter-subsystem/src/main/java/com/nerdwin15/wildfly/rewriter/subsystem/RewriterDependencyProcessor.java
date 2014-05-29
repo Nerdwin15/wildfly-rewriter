@@ -54,7 +54,12 @@ public class RewriterDependencyProcessor implements DeploymentUnitProcessor {
   @Override
   public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
     final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
-    addModules(deploymentUnit);
+    
+    System.out.println("****** DEPLOYMENTUNIT.NAME= " + deploymentUnit.getName());
+    
+    if (deploymentUnit.getName().endsWith("war")) {
+      addModules(deploymentUnit);
+    }
   }
   
   private void addModules(DeploymentUnit deploymentUnit) {

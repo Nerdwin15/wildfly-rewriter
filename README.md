@@ -56,5 +56,4 @@ To declare yourself a _RouteResolver_, use the ServiceLoader and load a _RouteRe
 If you wish to contribute, you're more than welcome to do so! Here are a few ideas we have of things to be done and just haven't gotten to.  Feel free to take an issue if you wish!
 
 - Add subsystem configuration that'll allow one to configure the application root to attach the handler to (right now, it's hard-coded at /ws)
-- Creation of the admin interface
 - Security constraints on the admin interface
