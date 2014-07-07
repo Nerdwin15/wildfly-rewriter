@@ -57,8 +57,9 @@ public class RouteResolvingServiceBean implements RouteResolvingService {
   @Override
   public String resolveRoute(String requestURI) {
     for (RuleModel rule : rules.getRules()) {
-      if (requestURI.startsWith(rule.getFrom()))
-        return rule.getTo();
+      if (requestURI.startsWith(rule.getFrom())) {
+        return requestURI.replace(rule.getFrom(), rule.getTo());
+      }
     }
     return null;
   }
